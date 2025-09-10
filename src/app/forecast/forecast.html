@@ -1,0 +1,126 @@
+<div class="weather-dashboard p-card">
+  <div class="current-section">
+    <div class="main-temp">
+      <i class="pi pi-moon" style="font-size: 2.5rem; vertical-align: middle;"></i>
+      <span class="temp-big">{{ currentTemp !== null ? (currentTemp + '°') : '--' }}</span>
+      <span class="unit">C</span>
+    </div>
+    <div class="weather-desc">Mostly clear</div>
+    <div class="minmax">
+      {{ todayMaxTemp !== null ? (todayMaxTemp + '°') : '--' }}
+      <span class="delimiter">/</span>
+      {{ todayMinTemp !== null ? (todayMinTemp + '°') : '--' }}
+    </div>
+    <div class="location">
+      {{ currentCity || 'Unknown city' }} · <span class="precise">Use precise location</span>
+    </div>
+    <div class="localtime">{{ currentDateTimeString }}</div>
+  </div>
+
+  <!-- City Search -->
+  <label for="city-input">Enter city:</label>
+  <input
+    id="city-input"
+    type="text"
+    list="city-list"
+    [(ngModel)]="selectedCity"
+    (keydown.enter)="fetchForecast()"
+    placeholder="Type or select city"
+    autocomplete="off"
+    class="city-input"
+  />
+  <datalist id="city-list">
+    <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+  </datalist>
+
+  <button (click)="fetchForecast()" [disabled]="loading" class="search-button">
+    {{ loading ? 'Loading...' : 'Search' }}
+  </button>
+  <div class="hint" style="opacity:0.6; font-size:0.9rem;">Press Enter or click Search</div>
+
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+
+  <!-- Weekly Forecast Row -->
+  <div class="week-row">
+    <div
+      class="day-forecast"
+      *ngFor="let day of groupedForecast; let i = index"
+      [ngClass]="{ active: i === selectedDayIndex }"
+      (click)="toggleDay(i)"
+    >
+      <i class="pi pi-cloud" style="font-size: 1.7rem"></i>
+      <div class="day-label">{{ day.date | date: 'EEE' }}</div>
+      <div class="day-temp">
+        {{ getMaxTemp(day.hours) }}° <span>{{ getMinTemp(day.hours) }}°</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Temperature Curve with Y-Axis -->
+  <div class="temp-curve-container" style="position: relative; width: 100%;">
+    <svg
+      class="temp-curve"
+      width="740"
+      height="140"
+      viewBox="0 0 740 140"
+      xmlns="http://www.w3.org/2000/svg"
+      style="display: block; margin: 0 auto;"
+    >
+      <!-- Y Axis Labels and Grid Lines -->
+      <g
+        class="y-axis"
+        fill="#fff"
+        font-size="12"
+        font-family="Arial, sans-serif"
+        text-anchor="end"
+        opacity="0.7"
+      >
+        <text x="35" y="20">34°</text>
+        <text x="35" y="45">32°</text>
+        <text x="35" y="70">30°</text>
+        <text x="35" y="95">28°</text>
+        <text x="35" y="120">26°</text>
+
+        <line x1="45" y1="18" x2="740" y2="18" stroke="#fff" stroke-opacity="0.15" />
+        <line x1="45" y1="43" x2="740" y2="43" stroke="#fff" stroke-opacity="0.15" />
+        <line x1="45" y1="68" x2="740" y2="68" stroke="#fff" stroke-opacity="0.15" />
+        <line x1="45" y1="93" x2="740" y2="93" stroke="#fff" stroke-opacity="0.15" />
+        <line x1="45" y1="118" x2="740" y2="118" stroke="#fff" stroke-opacity="0.15" />
+      </g>
+
+      <!-- Temperature Curve Polyline -->
+      <polyline
+        [attr.points]="getPolylinePoints(selectedDayHours)"
+        fill="none"
+        stroke="#fff"
+        stroke-width="3"
+        transform="translate(45, 0)"
+      />
+    </svg>
+
+    <div
+      class="curve-labels"
+      style="
+        margin-left: 45px;
+        display: flex;
+        justify-content: space-between;
+        width: 700px;
+        font-size: 1rem;
+        color: #e2eafe;
+        opacity: 0.8;
+        position: relative;
+        padding-top: 5px;
+        box-sizing: border-box;
+      "
+    >
+      <span style="flex: 1; text-align: center;">12 AM</span>
+      <span style="flex: 1; text-align: center;">3 AM</span>
+      <span style="flex: 1; text-align: center;">6 AM</span>
+      <span style="flex: 1; text-align: center;">9 AM</span>
+      <span style="flex: 1; text-align: center;">12 PM</span>
+      <span style="flex: 1; text-align: center;">3 PM</span>
+      <span style="flex: 1; text-align: center;">6 PM</span>
+      <span style="flex: 1; text-align: center;">9 PM</span>
+    </div>
+  </div>
+</div>

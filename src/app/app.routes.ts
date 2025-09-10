@@ -1,3 +1,8 @@
 import { Routes } from '@angular/router';
 
-export const routes: Routes = [];
+import { Forecast } from './forecast/forecast';
+
+export const routes: Routes = [
+  { path: '', redirectTo: 'forecast', pathMatch: 'full' },
+  { path: 'forecast', component: Forecast }
+];
