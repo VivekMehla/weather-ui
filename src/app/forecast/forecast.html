@@ -5,7 +5,7 @@
       <span class="temp-big">{{ currentTemp !== null ? (currentTemp + '°') : '--' }}</span>
       <span class="unit">C</span>
     </div>
-    <div class="weather-desc">Mostly clear</div>
+    <div class="weather-desc">{{ currentPrediction || '--' }}</div>
     <div class="minmax">
       {{ todayMaxTemp !== null ? (todayMaxTemp + '°') : '--' }}
       <span class="delimiter">/</span>
@@ -17,8 +17,7 @@
     <div class="localtime">{{ currentDateTimeString }}</div>
   </div>
 
-  <!-- City Search -->
-  <label for="city-input">Enter city:</label>
+  <label for="city-input" style="font-size: 1.5rem; margin-bottom: 1rem;">Enter city:</label>
   <input
     id="city-input"
     type="text"
@@ -36,11 +35,10 @@
   <button (click)="fetchForecast()" [disabled]="loading" class="search-button">
     {{ loading ? 'Loading...' : 'Search' }}
   </button>
-  <div class="hint" style="opacity:0.6; font-size:0.9rem;">Press Enter or click Search</div>
+  <div class="hint" style="opacity: 0.6; font-size: 0.9rem;">Press Enter or click Search</div>
 
   <div *ngIf="error" class="error-message">{{ error }}</div>
 
-  <!-- Weekly Forecast Row -->
   <div class="week-row">
     <div
       class="day-forecast"
@@ -48,7 +46,7 @@
       [ngClass]="{ active: i === selectedDayIndex }"
       (click)="toggleDay(i)"
     >
-      <i class="pi pi-cloud" style="font-size: 1.7rem"></i>
+      <i class="pi pi-cloud" style="font-size: 1.7rem;"></i>
       <div class="day-label">{{ day.date | date: 'EEE' }}</div>
       <div class="day-temp">
         {{ getMaxTemp(day.hours) }}° <span>{{ getMinTemp(day.hours) }}°</span>
@@ -56,17 +54,17 @@
     </div>
   </div>
 
-  <!-- Temperature Curve with Y-Axis -->
-  <div class="temp-curve-container" style="position: relative; width: 100%;">
+  <div class="temp-curve-container" style="position: relative; width: 100%; max-width: 900px; margin: 0 auto;">
     <svg
       class="temp-curve"
-      width="740"
+      width="850"
       height="140"
-      viewBox="0 0 740 140"
+      viewBox="0 0 850 140"
       xmlns="http://www.w3.org/2000/svg"
-      style="display: block; margin: 0 auto;"
+      style="display: block;"
+      (mousemove)="onMouseMove($event)"
+      (mouseleave)="onMouseLeave()"
     >
-      <!-- Y Axis Labels and Grid Lines -->
       <g
         class="y-axis"
         fill="#fff"
@@ -74,37 +72,48 @@
         font-family="Arial, sans-serif"
         text-anchor="end"
         opacity="0.7"
+        transform="translate(45, 0)"
       >
-        <text x="35" y="20">34°</text>
-        <text x="35" y="45">32°</text>
-        <text x="35" y="70">30°</text>
-        <text x="35" y="95">28°</text>
-        <text x="35" y="120">26°</text>
-
-        <line x1="45" y1="18" x2="740" y2="18" stroke="#fff" stroke-opacity="0.15" />
-        <line x1="45" y1="43" x2="740" y2="43" stroke="#fff" stroke-opacity="0.15" />
-        <line x1="45" y1="68" x2="740" y2="68" stroke="#fff" stroke-opacity="0.15" />
-        <line x1="45" y1="93" x2="740" y2="93" stroke="#fff" stroke-opacity="0.15" />
-        <line x1="45" y1="118" x2="740" y2="118" stroke="#fff" stroke-opacity="0.15" />
+        <ng-container *ngFor="let label of getYAxisLabels(); let i = index">
+          <text x="-10" [attr.y]="20 + i * 25">{{ label }}°</text>
+          <line
+            x1="10"
+            [attr.y1]="18 + i * 25"
+            x2="805"
+            [attr.y2]="18 + i * 25"
+            stroke="#fff"
+            stroke-opacity="0.15"
+          ></line>
+        </ng-container>
       </g>
 
-      <!-- Temperature Curve Polyline -->
       <polyline
-        [attr.points]="getPolylinePoints(selectedDayHours)"
+        [attr.points]="getPolylinePoints(selectedDayHours, 805)"
         fill="none"
         stroke="#fff"
         stroke-width="3"
         transform="translate(45, 0)"
       />
+
+      <!-- Transparent overlay rectangle to capture mouse events -->
+      <rect
+        x="45"
+        y="0"
+        [attr.width]="CURVE_WIDTH"
+        height="130"
+        fill="transparent"
+        style="cursor: crosshair;"
+      ></rect>
     </svg>
 
+    <!-- Fixed time labels below graph -->
     <div
       class="curve-labels"
       style="
         margin-left: 45px;
         display: flex;
         justify-content: space-between;
-        width: 700px;
+        width: 805px;
         font-size: 1rem;
         color: #e2eafe;
         opacity: 0.8;
@@ -121,6 +130,15 @@
       <span style="flex: 1; text-align: center;">3 PM</span>
       <span style="flex: 1; text-align: center;">6 PM</span>
       <span style="flex: 1; text-align: center;">9 PM</span>
+    </div>
+
+    <!-- Tooltip displayed on hover -->
+    <div
+      *ngIf="tooltipVisible"
+      class="tooltip"
+      [ngStyle]="{ left: tooltipX + 'px', top: tooltipY + 'px' }"
+    >
+      {{ tooltipTime }} - {{ tooltipTemp }}°
     </div>
   </div>
 </div>

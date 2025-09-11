@@ -79,7 +79,7 @@
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin: 2re 2rem 2rem;
+  height: 150px;
   overflow-x: auto;
   padding-bottom: 0.5rem;
   -webkit-overflow-scrolling: touch;
@@ -124,7 +124,6 @@
 
 /* Temp curve container full width with padding */
 .temp-curve-container {
-  margin: 1.5rem 2rem 0 2rem;
   position: relative;
   width: calc(100% - 4rem);
 }
@@ -142,12 +141,10 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
-  padding: 0 0.4rem 0 2.7rem;
   font-size: 1rem;
   color: #e2eafe;
   opacity: 0.8;
   position: absolute;
-  bottom: 4px;
   left: 0;
 }
 
@@ -211,4 +208,23 @@
   background: rgba(51, 134, 224, 0.45);
   box-shadow: none;
   transform: none;
+}
+
+.temp-curve-container {
+  position: relative;
+}
+
+.tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: rgba(33, 33, 33, 0.85);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  transform: translate(-50%, -120%);
+  user-select: none;
+  z-index: 10;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
 }
