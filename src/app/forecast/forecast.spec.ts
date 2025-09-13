@@ -13,26 +13,7 @@ describe('Forecast', () => {
   let fixture: ComponentFixture<Forecast>;
   let weatherService: MockWeatherService;
 
-  const mockHourlyWeather: HourlyWeatherEntry[] = [
-    {
-      date: '2025-09-10 03:00:00',
-      minTemp: 10,
-      maxTemp: 15,
-      maxWind: 5,
-      rain: false,
-      thunderstorm: false,
-      prediction: 'Clear sky'
-    },
-    {
-      date: '2025-09-10 06:00:00',
-      minTemp: 12,
-      maxTemp: 16,
-      maxWind: 4,
-      rain: false,
-      thunderstorm: false,
-      prediction: 'Sunny'
-    }
-  ];
+  const mockHourlyWeather: HourlyWeatherEntry[] = [];
 
   beforeEach(async () => {
     weatherService = new MockWeatherService();

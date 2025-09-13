@@ -21,8 +21,8 @@ export class WeatherService {
    * @param city City name to query
    * @returns Observable of WeatherEntry array
    */
-  getForecast(city: string): Observable<WeatherEntry[]> {
-    const params = new HttpParams().set('city', city.trim());
+  getForecast(city: string, isOffline: boolean): Observable<WeatherEntry[]> {
+    const params = new HttpParams().set('city', city.trim()).set('offline', String(isOffline));
 
     return this.http.get<WeatherEntry[]>("http://localhost:8080/weather-service/forecast", { params }).pipe(
       timeout(this.REQUEST_TIMEOUT_MS),

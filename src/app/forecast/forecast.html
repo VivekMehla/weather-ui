@@ -1,58 +1,66 @@
 <div class="weather-dashboard p-card">
-  <div class="current-section">
-    <div class="main-temp">
-      <i class="pi pi-moon" style="font-size: 2.5rem; vertical-align: middle;"></i>
-      <span class="temp-big">{{ currentTemp !== null ? (currentTemp + '°') : '--' }}</span>
-      <span class="unit">C</span>
+    <div class="current-section">
+        <div class="main-temp">
+        <i class="pi pi-moon" style="font-size: 2.5rem; vertical-align: middle;"></i>
+        <span class="temp-big">{{ currentTemp !== null ? (currentTemp + '°') : '--' }}</span>
+        <span class="unit">C</span>
+        </div>
+        <div class="weather-desc">{{ currentPrediction || '--' }}</div>
+        <div class="minmax">
+        {{ todayMaxTemp !== null ? (todayMaxTemp + '°') : '--' }}
+        <span class="delimiter">/</span>
+        {{ todayMinTemp !== null ? (todayMinTemp + '°') : '--' }}
+        </div>
+        <div class="location">
+        {{ currentCity || 'Unknown city' }} · <span class="precise">Use precise location</span>
+        </div>
+        <div class="localtime">{{ currentDateTimeString }}</div>
+            <label style="margin-right: 8px; font-size: 1rem; margin-bottom: 4px">
+            <input
+                type="checkbox"
+                [(ngModel)]="isOffline"
+                style="margin-right: 4px;"
+            />
+            Offline Mode
+        </label>
     </div>
-    <div class="weather-desc">{{ currentPrediction || '--' }}</div>
-    <div class="minmax">
-      {{ todayMaxTemp !== null ? (todayMaxTemp + '°') : '--' }}
-      <span class="delimiter">/</span>
-      {{ todayMinTemp !== null ? (todayMinTemp + '°') : '--' }}
+
+    <label for="city-input" style="font-size: 1.5rem; margin-bottom: 1rem;">Enter city:</label>
+    <input
+        id="city-input"
+        type="text"
+        list="city-list"
+        [(ngModel)]="selectedCity"
+        (keydown.enter)="fetchForecast()"
+        placeholder="Type or select city"
+        autocomplete="off"
+        class="city-input"
+    />
+    <datalist id="city-list">
+        <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+    </datalist>
+
+    <button (click)="fetchForecast()" [disabled]="loading" class="search-button">
+        {{ loading ? 'Loading...' : 'Search' }}
+    </button>
+    <div class="hint" style="opacity: 0.6; font-size: 0.9rem;">Press Enter or click Search</div>
+
+    <div *ngIf="error" class="error-message">{{ error }}</div>
+
+    <div class="week-row">
+        <div
+            class="day-forecast"
+            *ngFor="let day of groupedForecast; let i = index"
+            [ngClass]="{ active: i === selectedDayIndex }"
+            (click)="toggleDay(i)"
+            >
+        <i class="pi pi-cloud" style="font-size: 1.7rem;"></i>
+        <div class="day-label">{{ day.date | date: 'EEE' }}</div>
+            <div class="day-temp">
+                {{ getMaxTemp(day.hours) }}° <span>{{ getMinTemp(day.hours) }}°</span>
+            </div>
+        </div>
     </div>
-    <div class="location">
-      {{ currentCity || 'Unknown city' }} · <span class="precise">Use precise location</span>
-    </div>
-    <div class="localtime">{{ currentDateTimeString }}</div>
-  </div>
-
-  <label for="city-input" style="font-size: 1.5rem; margin-bottom: 1rem;">Enter city:</label>
-  <input
-    id="city-input"
-    type="text"
-    list="city-list"
-    [(ngModel)]="selectedCity"
-    (keydown.enter)="fetchForecast()"
-    placeholder="Type or select city"
-    autocomplete="off"
-    class="city-input"
-  />
-  <datalist id="city-list">
-    <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
-  </datalist>
-
-  <button (click)="fetchForecast()" [disabled]="loading" class="search-button">
-    {{ loading ? 'Loading...' : 'Search' }}
-  </button>
-  <div class="hint" style="opacity: 0.6; font-size: 0.9rem;">Press Enter or click Search</div>
-
-  <div *ngIf="error" class="error-message">{{ error }}</div>
-
-  <div class="week-row">
-    <div
-      class="day-forecast"
-      *ngFor="let day of groupedForecast; let i = index"
-      [ngClass]="{ active: i === selectedDayIndex }"
-      (click)="toggleDay(i)"
-    >
-      <i class="pi pi-cloud" style="font-size: 1.7rem;"></i>
-      <div class="day-label">{{ day.date | date: 'EEE' }}</div>
-      <div class="day-temp">
-        {{ getMaxTemp(day.hours) }}° <span>{{ getMinTemp(day.hours) }}°</span>
-      </div>
-    </div>
-  </div>
 
   <div class="temp-curve-container" style="position: relative; width: 100%; max-width: 900px; margin: 0 auto;">
     <svg

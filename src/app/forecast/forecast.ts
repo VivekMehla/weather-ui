@@ -45,6 +45,8 @@ export class Forecast implements OnInit {
   tooltipTime = '';
   tooltipTemp: number | null = null;
 
+  isOffline: boolean = false;
+
   constructor(private weatherService: WeatherService) {}
 
   ngOnInit(): void {
@@ -89,7 +91,7 @@ export class Forecast implements OnInit {
     this.groupedForecast = [];
     this.resetCurrentWeatherDisplay();
 
-    this.weatherService.getForecast(city).subscribe({
+    this.weatherService.getForecast(city,this.isOffline).subscribe({
       next: (data: HourlyWeatherEntry[]) => {
         this.forecastData = Array.isArray(data) ? data : [];
         this.groupByDay(this.forecastData);
@@ -254,4 +256,5 @@ export class Forecast implements OnInit {
   onMouseLeave(): void {
     this.tooltipVisible = false;
   }
+
 }
