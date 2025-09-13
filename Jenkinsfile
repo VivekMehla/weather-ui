@@ -9,6 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                echo "WORKSPACE: ${WORKSPACE}"
                 checkout scm
             }
         }
@@ -21,6 +22,7 @@ pipeline {
                 }
             }
             steps {
+                echo "WORKSPACE: ${WORKSPACE}"
                 sh 'npm ci'
                 sh 'npm run build -- weather-ui --configuration production --output-path=dist/weather-ui'
             }
