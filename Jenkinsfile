@@ -17,7 +17,7 @@ pipeline {
             agent {
                 docker {
                     image 'node:20'
-                    args "--volumes-from jenkins -w /var/jenkins_home/workspace/weather-ui"
+                    args "--volumes-from jenkins -w ${WORKSPACE}"
                 }
             }
             steps {
