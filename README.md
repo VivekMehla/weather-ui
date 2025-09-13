@@ -1,59 +1,84 @@
-# WeatherUi
+# Weather Dashboard UI
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.2.
+## Overview
 
-## Development server
+This Angular application provides a user-friendly weather dashboard interface.  
+Users can input cities to fetch weather data, view detailed forecasts in a clean layout, and toggle between online and offline modes.
 
-To start a local development server, run:
+The UI uses PrimeNG components and SVG graphics to display dynamic temperature curves and interactive tooltips.
 
-```bash
-ng serve
-```
+---
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Features
 
-## Code scaffolding
+- Responsive weather dashboard with current temperature, weather description, and min/max.
+- City input with autocomplete from a predefined list.
+- Offline mode toggle to switch between live API calls and cached/offline data.
+- Interactive day-wise forecast selection.
+- Dynamic temperature curve visualization with tooltip on hover.
+- Error and loading state handling.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+---
 
-```bash
-ng generate component component-name
-```
+## Design and Implementation Approach
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- **Component-Based Structure:**  
+  Built with Angular components, using PrimeNG UI elements for a polished user experience.
 
-```bash
-ng generate --help
-```
+- **Two-Way Binding and Event Handling:**  
+  City input and offline toggle use `[(ngModel)]` for reactive updates. User actions trigger API calls.
 
-## Building
+- **Service Integration:**  
+  Connects to backend weather service API, passing the offline toggle flag to control request mode.
 
-To build the project run:
+- **SVG Graphics & Data Binding:**  
+  Temperature curves are rendered using SVG `<polyline>`, updated dynamically with user selection.
 
-```bash
-ng build
-```
+- **User Feedback:**  
+  Loading states disable inputs and display informative messages. Errors are clearly shown.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+---
 
-## Running unit tests
+## Technologies Used
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+- Angular 15
+- PrimeNG UI Library
+- TypeScript, SCSS/CSS
+- RxJS for asynchronous data flow
+- SVG for custom charts and tooltips
 
-```bash
-ng test
-```
+---
 
-## Running end-to-end tests
+## Design Patterns Used
 
-For end-to-end (e2e) testing, run:
+- **Component Pattern:** Angular follows component-driven UI design for modularity.
+- **Observer Pattern:** RxJS observables manage asynchronous service calls and UI updates.
+- **Facade Pattern:** Services provide a simplified interface for components to access backend data.
+- **Dependency Injection:** Angular’s DI handles service injection cleanly.
+- **State Management:** Local component state controls UI toggles and selected forecast day.
 
-```bash
-ng e2e
-```
+---
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## How to Run
 
-## Additional Resources
+1. Install dependencies: npm install
+2. Run the development server: ng serve
+3. Open in browser at `http://localhost:4200`
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
+
+## Usage
+
+- Use the city input to type or select a city.
+- Toggle **Offline Mode** using the switch in the top right to simulate offline behavior.
+- Click **Search** or press **Enter** to fetch weather forecast.
+- Select a day from the weekly forecast to view detailed hourly temperatures.
+- Hover over the temperature curve to view detailed tooltips.
+
+---
+
+*For detailed backend API info, see the backend README.*
+
+
+
+
