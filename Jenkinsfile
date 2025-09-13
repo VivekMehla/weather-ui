@@ -9,7 +9,6 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                echo "WORKSPACE: ${WORKSPACE}"
                 checkout scm
             }
         }
@@ -18,11 +17,10 @@ pipeline {
             agent {
                 docker {
                     image 'node:20'
-                    args "--volumes-from jenkins -w ${WORKSPACE}"
+                    args "--volumes-from jenkins -w /var/jenkins_home/workspace/weather-ui-build"
                 }
             }
             steps {
-                echo "WORKSPACE: ${WORKSPACE}"
                 sh 'npm ci'
                 sh 'npm run build -- weather-ui --configuration production --output-path=dist/weather-ui'
             }
