@@ -17,20 +17,18 @@ pipeline {
             agent {
                 docker {
                     image 'node:20'
-                    args "-v /var/jenkins_home/workspace/weather-ui:/app -w /app"
+                    args "--volumes-from jenkins -w /var/jenkins_home/workspace/weather-ui"
                 }
             }
             steps {
                 sh 'npm ci'
-                sh 'npm run build -- weather-ui --configuration production --output-path=/app/dist/weather-ui'
-                sh 'ls -l /app/dist'
+                sh 'npm run build -- weather-ui --configuration production --output-path=dist/weather-ui'
             }
         }
 
         stage('Docker Build') {
             steps {
                 script {
-                    sh 'ls -l ${WORKSPACE}/dist/weather-ui'
                     docker.build("${IMAGE_NAME}", ".")
                 }
             }
