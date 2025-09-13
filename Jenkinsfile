@@ -23,6 +23,7 @@ pipeline {
             steps {
                 sh 'npm ci'
                 sh 'npm run build -- weather-ui --configuration production'
+                sh 'cp -r dist/weather-ui ./dist-copy'
             }
         }
 
