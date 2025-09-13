@@ -17,13 +17,12 @@ pipeline {
             agent {
                 docker {
                     image 'node:20'
-                    args '-v $PWD:/app -w /app'
+                    args '-v ${WORKSPACE}:/app -w /app'
                 }
             }
             steps {
                 sh 'npm ci'
                 sh 'npm run build -- weather-ui --configuration production'
-                sh 'cp -r dist/weather-ui ./dist-copy'
             }
         }
 
