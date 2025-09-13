@@ -17,7 +17,7 @@ pipeline {
             agent {
                 docker {
                     image 'node:20'
-                    args '-v ${WORKSPACE}:/app -w /app'
+                    args "-v ${WORKSPACE}:/app -w /app"
                 }
             }
             steps {
