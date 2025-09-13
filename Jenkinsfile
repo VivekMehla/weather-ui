@@ -22,14 +22,14 @@ pipeline {
             }
             steps {
                 sh 'npm ci'
-                sh 'npm run build -- weather-ui --configuration production'
+                sh 'npm run build -- weather-ui --configuration production --output-path=/app/dist/weather-ui'
             }
         }
 
         stage('Docker Build') {
             steps {
                 script {
-                    docker.build("${IMAGE_NAME}")
+                    docker.build("${IMAGE_NAME}", ".")
                 }
             }
         }
