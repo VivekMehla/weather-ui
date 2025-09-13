@@ -22,7 +22,7 @@ pipeline {
             }
             steps {
                 sh 'npm ci'
-                sh 'npm run build --configuration production'
+                sh 'npm run build -- weather-ui --configuration production'
             }
         }
 
