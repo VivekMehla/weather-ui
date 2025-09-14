@@ -11,7 +11,7 @@ import { environment } from '../../environments/environment';
 })
 export class WeatherService {
 
-  private readonly baseUrl: string = environment.weatherApiBaseUrl || 'http://localhost:8082/weather-service/forecast';
+  private readonly baseUrl: string = environment.weatherApiBaseUrl;
   private readonly REQUEST_TIMEOUT_MS = 10000; // 10 seconds timeout
 
   constructor(private http: HttpClient) {}
@@ -22,7 +22,7 @@ export class WeatherService {
    * @returns Observable of WeatherEntry array
    */
   getForecast(city: string, isOffline: boolean): Observable<WeatherEntry[]> {
-    const params = new HttpParams().set('city', city.trim()).set('offline', String(isOffline));
+    const params = new HttpParams().set('city', city.trim()).set('isOffline', String(isOffline));
 
     return this.http.get<WeatherEntry[]>("http://localhost:8082/weather-service/forecast", { params }).pipe(
       timeout(this.REQUEST_TIMEOUT_MS),
