@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:20'
-            args "--volumes-from jenkins -w ${WORKSPACE}"
-        }
-    }
+    agent any
 
     environment {
         IMAGE_NAME = "weather-ui-image"
@@ -19,6 +14,13 @@ pipeline {
         }
 
         stage('Install & Build Angular') {
+            agent {
+                docker {
+                    image 'node:20'
+                    args "--volumes-from jenkins"
+                    reuseNode true
+                }
+            }
             steps {
                 sh 'npm ci'
                 sh 'npm run build -- weather-ui --configuration production --output-path=dist/weather-ui'
