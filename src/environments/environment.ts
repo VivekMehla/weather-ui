@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  weatherApiBaseUrl: 'http:localhost:8080/weather-service/forecast'
+  weatherApiBaseUrl: 'http:localhost:8082/weather-service/forecast'
 };
