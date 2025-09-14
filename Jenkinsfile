@@ -27,22 +27,22 @@ pipeline {
             }
         }
 
-        // stage('Docker Build') {
-        //     steps {
-        //         script {
-        //             docker.build("${IMAGE_NAME}", ".")
-        //         }
-        //     }
-        // }
+        stage('Docker Build') {
+            steps {
+                script {
+                    docker.build("${IMAGE_NAME}", ".")
+                }
+            }
+        }
 
-        // stage('Run Container') {
-        //     steps {
-        //         script {
-        //             sh "docker rm -f ${CONTAINER_NAME} || true"
-        //             sh "docker run -d -p 8082:80 --name ${CONTAINER_NAME} ${IMAGE_NAME}"
-        //         }
-        //     }
-        // }
+        stage('Run Container') {
+            steps {
+                script {
+                    sh "docker rm -f ${CONTAINER_NAME} || true"
+                    sh "docker run -d -p 8082:80 --name ${CONTAINER_NAME} ${IMAGE_NAME}"
+                }
+            }
+        }
     }
 
     post {
